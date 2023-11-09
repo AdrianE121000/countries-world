@@ -10,6 +10,7 @@ const CountriesCard = ({ country }) => {
       .then((res) => res.json())
       .then((response) => {
         setData(response[0]);
+        console.log(response[0]);
       })
       .catch(() => console.log('Error al hacer el fetch'));
   }, [country]);
@@ -17,7 +18,7 @@ const CountriesCard = ({ country }) => {
   return (
     <>
       {!data ? (
-        <div className='noCountrie'>
+        <div className='error'>
           Country not found, write the name correctly.
         </div>
       ) : (
@@ -46,7 +47,7 @@ const CountriesCard = ({ country }) => {
             </h5>
             <h5>
               Common Languages:{' '}
-              <span>{Object.values(data.languages).join('.')}</span>
+              <span>{Object.values(data.languages).join(', ')}</span>
             </h5>
           </div>
         </>

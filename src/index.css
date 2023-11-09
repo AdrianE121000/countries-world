@@ -95,6 +95,16 @@ body {
     margin-top: 15px;
 }
 
+.error {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid #222;
+    border-radius: 8px;
+    margin: 25px;
+    padding: 5px;
+}
+
 ::selection {
     background: rgb(100, 149, 237, 0.8);
     color: white;
