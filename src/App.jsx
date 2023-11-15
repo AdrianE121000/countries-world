@@ -13,10 +13,6 @@ function App() {
     resetField,
   } = useForm();
 
-  /*const handleInputChange = (event) => {
-    setPais(event.target.value);
-  };*/
-
   const search = (event) => {
     setPais(event.countryName);
     resetField('countryName');

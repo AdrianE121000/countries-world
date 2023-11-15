@@ -10,16 +10,19 @@ const CountriesCard = ({ country }) => {
       .then((res) => res.json())
       .then((response) => {
         setData(response[0]);
-        console.log(response[0]);
       })
       .catch(() => console.log('Error al hacer el fetch'));
   }, [country]);
 
   return (
     <>
-      {!data ? (
+      {data === undefined ? (
         <div className='error'>
           Country not found, write the name correctly.
+        </div>
+      ) : !data ? (
+        <div className='centered'>
+          <div className='spinner'></div>
         </div>
       ) : (
         <>
@@ -43,7 +46,12 @@ const CountriesCard = ({ country }) => {
               Population: <span>{data.population}</span>
             </h5>
             <h5>
-              Currency: <span>{Object.keys(data.currencies)[0]}</span>
+              Currency:{' '}
+              <span>
+                {Object.keys(data.currencies)[0]} -{' '}
+                {data.currencies[Object.keys(data.currencies)[0]].symbol}
+                {data.currencies[Object.keys(data.currencies)[0]].name}
+              </span>
             </h5>
             <h5>
               Common Languages:{' '}
