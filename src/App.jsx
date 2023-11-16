@@ -1,31 +1,47 @@
-import { useState } from 'react';
-import CountriesCard from './components/CountriesCard';
-import { useForm } from 'react-hook-form';
+import { useState, useRef, useEffect } from 'react';
+import { CountriesCard } from './components/CountriesCard';
+import { useCountry } from './hooks/useCountry';
+
+function useSearch() {
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState('');
+  const isFirstInput = useRef(true);
+
+  useEffect(() => {
+    if (isFirstInput.current) {
+      isFirstInput.current = search === '';
+      return;
+    }
+
+    if (search === '') {
+      setError('Write the name of the country');
+      return;
+    }
+
+    setError(null);
+  }, [search]);
+
+  return { search, setSearch, error };
+}
 
 function App() {
-  const [pais, setPais] = useState('');
-  const [enviarDatos, setEnviarDatos] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setFocus,
-    resetField,
-  } = useForm();
+  const { search, setSearch, error } = useSearch();
+  const { country, getCountry, loading } = useCountry({ search });
 
-  const search = (event) => {
-    setPais(event.countryName);
-    resetField('countryName');
-    setFocus('countryName');
-    setEnviarDatos(true);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    getCountry();
+  };
+
+  const handleChange = (event) => {
+    setSearch(event.target.value);
   };
 
   return (
     <>
       <div className='container'>
-        {errors.countryName?.type === 'required' && (
-          <div className='error'>Write the name of the country</div>
-        )}
+        {error && <p className='error'>{error}</p>}
         <div className='search-box'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -41,21 +57,26 @@ function App() {
             />
           </svg>
 
-          <form onSubmit={handleSubmit(search)}>
+          <form onSubmit={handleSubmit}>
             <input
               type='text'
-              id='countryName'
+              onChange={handleChange}
+              value={search}
+              name='search'
               className='userinput'
               placeholder='Enter country name...'
               autoFocus
-              {...register('countryName', {
-                required: true,
-              })}
             />
           </form>
         </div>
         <div className='info-box'>
-          {enviarDatos && <CountriesCard country={pais} />}
+          {loading ? (
+            <div className='centered'>
+              <div className='spinner'></div>
+            </div>
+          ) : (
+            <CountriesCard country={country} />
+          )}
         </div>
       </div>
     </>

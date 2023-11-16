@@ -99,7 +99,8 @@ body {
     display: flex;
     flex-direction: column;
     text-align: center;
-    border: 1px solid #222;
+    border: 1px solid red;
+    color: red;
     border-radius: 8px;
     margin: 25px;
     padding: 5px;

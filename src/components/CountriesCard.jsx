@@ -1,67 +1,61 @@
-import React from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useCountry } from '../hooks/useCountry';
 
-const CountriesCard = ({ country }) => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    fetch(`https://restcountries.com/v3.1/name/${country}?fullText-true`)
-      .then((res) => res.json())
-      .then((response) => {
-        setData(response[0]);
-      })
-      .catch(() => console.log('Error al hacer el fetch'));
-  }, [country]);
-
+export function Component({ country }) {
   return (
     <>
-      {data === undefined ? (
-        <div className='error'>
-          Country not found, write the name correctly.
+      <div className='flag-and-name'>
+        <div className='flag'>
+          <img
+            src={country[0].flags.svg}
+            alt='Countie Flag'
+          />
         </div>
-      ) : !data ? (
-        <div className='centered'>
-          <div className='spinner'></div>
-        </div>
-      ) : (
-        <>
-          <div className='flag-and-name'>
-            <div className='flag'>
-              <img
-                src={data.flags.svg}
-                alt='Countie Flag'
-              />
-            </div>
-            <h3 className='country-name'>{data.name.common}</h3>
-          </div>
-          <div className='other-info'>
-            <h5>
-              Capital: <span>{data.capital}</span>
-            </h5>
-            <h5>
-              Continent: <span>{data.continents}</span>
-            </h5>
-            <h5>
-              Population: <span>{data.population}</span>
-            </h5>
-            <h5>
-              Currency:{' '}
-              <span>
-                {Object.keys(data.currencies)[0]} -{' '}
-                {data.currencies[Object.keys(data.currencies)[0]].symbol}
-                {data.currencies[Object.keys(data.currencies)[0]].name}
-              </span>
-            </h5>
-            <h5>
-              Common Languages:{' '}
-              <span>{Object.values(data.languages).join(', ')}</span>
-            </h5>
-          </div>
-        </>
-      )}
+        <h3 className='country-name'>{country[0].name.common}</h3>
+      </div>
+      <div className='other-info'>
+        <h5>
+          Capital: <span>{country[0].capital}</span>
+        </h5>
+        <h5>
+          Continent: <span>{country[0].continents}</span>
+        </h5>
+        <h5>
+          Population: <span>{country[0].population}</span>
+        </h5>
+        <h5>
+          Currency:{' '}
+          <span>
+            {Object.keys(country[0].currencies)[0]} -{' '}
+            {
+              country[0].currencies[Object.keys(country[0].currencies)[0]]
+                .symbol
+            }
+            {country[0].currencies[Object.keys(country[0].currencies)[0]].name}
+          </span>
+        </h5>
+        <h5>
+          Common Languages:{' '}
+          <span>{Object.values(country[0].languages).join(', ')}</span>
+        </h5>
+      </div>
     </>
   );
-};
+}
 
-export default CountriesCard;
+export function NoCountryResults({ country }) {
+  const { previousSearch } = useCountry({ country });
+  return previousSearch.current === country ? (
+    <div></div>
+  ) : (
+    <div className='error'>Country not found, write the name correctly.</div>
+  );
+}
+
+export function CountriesCard({ country }) {
+  const hasCountry = country?.length > 0;
+  return hasCountry ? (
+    <Component country={country} />
+  ) : (
+    <NoCountryResults country={country} />
+  );
+}
