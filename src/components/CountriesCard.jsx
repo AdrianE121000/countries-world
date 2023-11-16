@@ -29,7 +29,7 @@ export function Component({ country }) {
             {
               country[0].currencies[Object.keys(country[0].currencies)[0]]
                 .symbol
-            }
+            }{' '}
             {country[0].currencies[Object.keys(country[0].currencies)[0]].name}
           </span>
         </h5>

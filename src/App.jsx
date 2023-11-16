@@ -66,6 +66,7 @@ function App() {
               className='userinput'
               placeholder='Enter country name...'
               autoFocus
+              spellCheck='false'
             />
           </form>
         </div>
