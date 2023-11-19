@@ -1,37 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { CountriesCard } from './components/CountriesCard';
 import { useCountry } from './hooks/useCountry';
 
-function useSearch() {
-  const [error, setError] = useState(null);
-  const [search, setSearch] = useState('');
-  const isFirstInput = useRef(true);
-
-  useEffect(() => {
-    if (isFirstInput.current) {
-      isFirstInput.current = search === '';
-      return;
-    }
-
-    if (search === '') {
-      setError('Write the name of the country');
-      return;
-    }
-
-    setError(null);
-  }, [search]);
-
-  return { search, setSearch, error };
-}
-
 function App() {
-  const { search, setSearch, error } = useSearch();
+  const [search, setSearch] = useState('');
   const { country, getCountry, loading } = useCountry({ search });
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     getCountry();
+    setSearch('');
   };
 
   const handleChange = (event) => {
@@ -41,7 +20,6 @@ function App() {
   return (
     <>
       <div className='container'>
-        {error && <p className='error'>{error}</p>}
         <div className='search-box'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
